@@ -1,3 +1,58 @@
+# Eden Field
+
+Eden Field is a distributed substrate with identity, sync, and governance features.
+
+Quick start
+
+1. Install dependencies:
+
+```bash
+cd Edenfield-main
+npm install
+```
+
+2. Use the CLI (installed via `npm link` or when package is installed):
+
+```bash
+npm link
+edenfield install
+edenfield lease create OWNER_ID ORGANISM_ID
+edenfield lease list OWNER_ID
+```
+
+Governance and leases
+
+- The repository includes a simple `LeaseManager` at `core/leases.js` that stores `leases.json` in the repo root.
+- Permission enforcement now supports organism-scoped checks and allows lease owners to be treated as administrators for their organisms.
+- The `PermissionContext` exposes `subjectId` so callers can present their identity when making guarded requests.
+
+Developer checks
+
+```bash
+cd Edenfield-main
+npm run lint
+npm test
+```
+
+If you want me to run lint/test here, I can attempt that — or run the commands above in your environment.
+
+Safe auto-build / watch mode
+
+The repository includes a safe watch/build helper at `bin/watch-build.js` and a `dev:watch` script.
+
+- Run locally: `npm run dev:watch` — this watches repo files and runs `npm run build` when files change.
+- The watcher uses debounce and enforces a minimum interval between builds (defaults: 500ms debounce, 60s min-interval).
+- Hourly caps prevent runaway build storms (default 60 builds/hour).
+- Remote triggering is disabled by default. To enable a guarded remote trigger set these environment variables before running the watcher:
+
+```bash
+export BUILD_TRIGGER_ENABLED=true
+export BUILD_TRIGGER_TOKEN="your-secret-token"
+export BUILD_TRIGGER_PORT=9123
+node ./bin/watch-build.js
+```
+
+The remote trigger endpoint is `POST /trigger` and requires the header `x-build-token` matching `BUILD_TRIGGER_TOKEN`. The watcher enforces rate limits and a minimum interval to avoid uncontrolled loops or resource exhaustion. Do not enable remote triggers without securing the token and limiting network exposure.
 # Eden Field - Distributed Substrate v500
 
 A sophisticated, production-grade PWA framework for building distributed, conflict-aware applications with robust identity and permission management.

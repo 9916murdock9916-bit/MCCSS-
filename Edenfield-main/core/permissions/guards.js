@@ -2,32 +2,32 @@
 import { Enforcement } from "./enforce.js";
 
 export const Guards = {
-  dataRead() {
-    Enforcement.require("data.read");
+  dataRead(organismId = null) {
+    return Enforcement.require("data.read", { organism: organismId });
   },
 
-  dataWrite() {
-    Enforcement.require("data.write");
+  dataWrite(organismId = null) {
+    return Enforcement.require("data.write", { organism: organismId });
   },
 
-  dataAll() {
-    Enforcement.require("data.all");
+  dataAll(organismId = null) {
+    return Enforcement.require("data.all", { organism: organismId });
   },
 
-  syncQueue() {
-    Enforcement.require("sync.queue");
+  syncQueue(organismId = null) {
+    return Enforcement.require("sync.queue", { organism: organismId });
   },
 
-  syncAll() {
-    Enforcement.require("sync.all");
+  syncAll(organismId = null) {
+    return Enforcement.require("sync.all", { organism: organismId });
   },
 
-  organismManage() {
-    Enforcement.require("organism.manage");
+  organismManage(organismId = null) {
+    return Enforcement.require("organism.manage", { organism: organismId });
   },
 
   systemFull() {
-    Enforcement.require("system.full");
+    return Enforcement.require("system.full");
   }
 };
 

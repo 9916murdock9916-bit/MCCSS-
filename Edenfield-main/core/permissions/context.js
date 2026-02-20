@@ -4,6 +4,7 @@ export const PermissionContext = {
   current: {
     role: "guest",
     organism: null,
+    subjectId: null,
     dynamicCaps: []
   },
 
@@ -13,6 +14,10 @@ export const PermissionContext = {
 
   setOrganism(id) {
     this.current.organism = id;
+  },
+
+  setSubject(id) {
+    this.current.subjectId = id;
   },
 
   grantDynamic(cap) {

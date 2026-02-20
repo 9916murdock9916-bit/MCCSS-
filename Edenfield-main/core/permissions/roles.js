@@ -7,7 +7,7 @@ export const Roles = {
     this.registry = {
       system: {
         inherits: [],
-        capabilities: ["system.full", "data.all", "sync.all", "organism.manage"]
+        capabilities: ["system.full", "data.all", "sync.all", "organism.manage", "lease.manage"]
       },
 
       user: {

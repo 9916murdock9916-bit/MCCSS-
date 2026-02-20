@@ -16,6 +16,8 @@ export const Capabilities = {
 
       "organism.manage": { description: "Install, remove, or modify organisms" },
 
+      "lease.manage": { description: "Manage leases and tenant assignments" },
+
       "system.full": { description: "Full substrate authority" }
     };
   },
