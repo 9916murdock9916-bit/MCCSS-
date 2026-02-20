@@ -6,7 +6,7 @@ import { Capabilities } from "./capabilities.js";
 import { LeaseManager } from "../leases.js";
 
 export const Enforcement = {
-  async check(capability, opts = {}) {
+  check(capability, opts = {}) {
     const ctx = PermissionContext.current;
 
     // system role overrides everything
@@ -24,7 +24,7 @@ export const Enforcement = {
         if (ctx.organism === opts.organism) return true;
 
         // lease-based admin: subjectId can be owner of the organism
-        if (ctx.subjectId && (await LeaseManager.init(), LeaseManager.isOwnerOf(ctx.subjectId, opts.organism))) return true;
+        if (ctx.subjectId && LeaseManager.isOwnerOfSync && LeaseManager.isOwnerOfSync(ctx.subjectId, opts.organism)) return true;
 
         return false;
       }
@@ -37,8 +37,8 @@ export const Enforcement = {
     return false;
   },
 
-  async require(capability, opts = {}) {
-    if (!(await this.check(capability, opts))) {
+  require(capability, opts = {}) {
+    if (!this.check(capability, opts)) {
       throw new Error(`Permission denied: missing capability ${capability}`);
     }
   }

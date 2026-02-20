@@ -19,6 +19,9 @@ if (!ADMIN_TOKEN) {
 
 const PORT = Number(process.env.ADMIN_PORT || 9321);
 
+// ensure leases are loaded into memory for sync checks
+try { LeaseManager.initSync && LeaseManager.initSync(); } catch (e) { /* best-effort */ }
+
 function requireAuth(req, res) {
   const token = req.headers['x-admin-token'] || '';
   if (!token || token !== ADMIN_TOKEN) {

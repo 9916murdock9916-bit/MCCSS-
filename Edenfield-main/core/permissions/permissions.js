@@ -1,10 +1,11 @@
 // core/permissions.js
 
-import { Roles } from "./permissions/roles.js";
-import { Capabilities } from "./permissions/capabilities.js";
-import { Enforcement } from "./permissions/enforce.js";
-import { PermissionContext } from "./permissions/context.js";
-import { Guards } from "./permissions/guards.js";
+import { Roles } from "./roles.js";
+import { Capabilities } from "./capabilities.js";
+import { Enforcement } from "./enforce.js";
+import { PermissionContext } from "./context.js";
+import { Guards } from "./guards.js";
+import { LeaseManager } from "../leases.js";
 
 export const Permissions = {
   roles: Roles,
@@ -16,5 +17,9 @@ export const Permissions = {
   init() {
     Roles.init();
     Capabilities.init();
+    // load leases synchronously at startup so permission checks can be sync
+    if (LeaseManager && LeaseManager.initSync) {
+      try { LeaseManager.initSync(); } catch (e) { /* best-effort */ }
+    }
   }
 };
