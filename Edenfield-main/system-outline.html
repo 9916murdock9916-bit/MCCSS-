@@ -13,10 +13,52 @@
 
         body {
             font-family: 'Monaco', 'Courier New', monospace;
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            background: linear-gradient(135deg, #0f0f1e 0%, #1a1a3e 50%, #0d1f3e 100%);
             color: #e0e0e0;
             min-height: 100vh;
             padding: 2rem;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 20% 50%, rgba(0, 212, 255, 0.05) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 80%, rgba(0, 153, 204, 0.05) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
 
         .header {
@@ -25,14 +67,19 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            position: relative;
+            z-index: 1;
+            animation: slideInDown 0.8s ease-out;
         }
 
         .header h1 {
             font-size: 2rem;
-            background: linear-gradient(135deg, #00d4ff, #0099cc);
+            background: linear-gradient(135deg, #00ff88 0%, #00d4ff 50%, #0099cc 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
+            font-weight: 800;
+            letter-spacing: -0.5px;
         }
 
         .header-buttons {
@@ -42,89 +89,142 @@
 
         button {
             padding: 0.75rem 1.5rem;
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(0, 212, 255, 0.2);
             border-radius: 6px;
-            background: rgba(255, 255, 255, 0.05);
+            background: rgba(0, 212, 255, 0.05);
             color: #00d4ff;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
             font-family: inherit;
             font-weight: 600;
+            letter-spacing: 0.5px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.1);
+            transition: left 0.4s ease;
+            z-index: -1;
+        }
+
+        button:hover::before {
+            left: 100%;
         }
 
         button:hover {
-            background: rgba(0, 212, 255, 0.1);
-            border-color: rgba(0, 212, 255, 0.3);
+            background: rgba(0, 212, 255, 0.12);
+            border-color: rgba(0, 212, 255, 0.4);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 212, 255, 0.2);
         }
 
         .container {
             max-width: 1000px;
             margin: 0 auto;
+            position: relative;
+            z-index: 1;
         }
 
         .outline {
             background: rgba(0, 0, 0, 0.3);
-            border: 1px solid rgba(0, 212, 255, 0.2);
-            border-radius: 8px;
+            border: 1px solid rgba(0, 212, 255, 0.15);
+            border-radius: 12px;
             padding: 2rem;
             line-height: 1.8;
             font-size: 0.95rem;
-            color: #c0c0c0;
+            color: #c0d0e0;
             max-height: 80vh;
             overflow-y: auto;
+            animation: slideInUp 1.2s ease-out 0.2s backwards;
+            position: relative;
+        }
+
+        .outline::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(0, 212, 255, 0.3), transparent);
         }
 
         .outline h1 {
-            color: #00d4ff;
+            background: linear-gradient(135deg, #00ff88 0%, #00d4ff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
             margin: 2rem 0 1rem 0;
             font-size: 1.5rem;
-            border-bottom: 1px solid rgba(0, 212, 255, 0.3);
+            border-bottom: 1px solid rgba(0, 212, 255, 0.2);
             padding-bottom: 0.5rem;
+            font-weight: 700;
+            letter-spacing: -0.3px;
         }
 
         .outline h2 {
-            color: #00d4ff;
+            background: linear-gradient(135deg, #00d4ff, #0099cc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
             margin: 1.5rem 0 0.75rem 0;
             font-size: 1.2rem;
             margin-left: 1.5rem;
+            font-weight: 700;
         }
 
         .outline h3 {
-            color: #88ccff;
+            color: #88ffcc;
             margin: 1rem 0 0.5rem 0;
             font-size: 1rem;
             margin-left: 3rem;
+            font-weight: 600;
+            letter-spacing: 0.2px;
         }
 
         .outline > p,
         .outline > pre {
             margin: 0.75rem 0;
+            color: #c0d0e0;
         }
 
         .outline ul,
         .outline ol {
             margin: 0.75rem 0 0.75rem 2rem;
+            color: #c0d0e0;
         }
 
         .outline li {
             margin: 0.5rem 0;
+            color: #c0d0e0;
         }
 
         .outline code {
             background: rgba(0, 212, 255, 0.1);
-            border: 1px solid rgba(0, 212, 255, 0.2);
+            border: 1px solid rgba(0, 212, 255, 0.15);
             padding: 0.2rem 0.5rem;
             border-radius: 4px;
-            color: #00d4ff;
+            color: #00ff88;
+            font-weight: 600;
         }
 
         .outline pre {
             background: rgba(0, 0, 0, 0.5);
-            border-left: 3px solid #00d4ff;
+            border-left: 3px solid #00ff88;
             padding: 1rem;
             border-radius: 4px;
             overflow-x: auto;
             margin-left: 1.5rem;
+            border-top: 1px solid rgba(0, 212, 255, 0.1);
+            border-right: 1px solid rgba(0, 212, 255, 0.1);
+            border-bottom: 1px solid rgba(0, 212, 255, 0.1);
         }
 
         .controls {
@@ -134,20 +234,23 @@
             display: flex;
             gap: 1rem;
             flex-direction: column;
+            animation: slideInUp 1s ease-out 0.5s backwards;
+            z-index: 10;
         }
 
         .controls button {
             width: 200px;
             padding: 0.75rem 1.5rem;
+            animation: fadeIn 1.2s ease-out 0.7s backwards;
         }
 
         .copy-feedback {
             position: fixed;
             top: 2rem;
             right: 2rem;
-            background: rgba(0, 255, 100, 0.2);
-            border: 1px solid rgba(0, 255, 100, 0.5);
-            color: #00ff64;
+            background: rgba(0, 255, 100, 0.15);
+            border: 1px solid rgba(0, 255, 100, 0.4);
+            color: #00ff88;
             padding: 1rem 1.5rem;
             border-radius: 8px;
             display: none;
@@ -1012,5 +1115,9 @@ Ready to proceed to OMB presentation.
             }, 3000);
         }
     </script>
+
+    <!-- Production Configuration & API -->
+    <script src="config.js"></script>
+    <script src="api.js"></script>
 </body>
 </html>

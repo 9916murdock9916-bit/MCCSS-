@@ -289,6 +289,72 @@
       <p style="margin-top: 1rem; font-size: 0.8rem;">Eden Field © 2024-2026 | Open Source | No Vendor Lock-in</p>
     </div>
   </div>
+
+  <script>
+    // Animate statistics on page load
+    document.addEventListener('DOMContentLoaded', function() {
+      const stats = document.querySelectorAll('.stat-value');
+      
+      const animateCounter = (element) => {
+        const text = element.textContent;
+        const isPercentage = text.includes('%');
+        const isDollar = text.includes('$');
+        const isFraction = text.includes('/');
+        const isTime = text.includes('Months');
+
+        let numStr = text.replace(/[^0-9.]/g, '');
+        const target = parseFloat(numStr);
+        let current = 0;
+        const increment = target / 60;
+        const duration = 2000; // 2 seconds
+        const startTime = Date.now();
+
+        const update = () => {
+          const elapsed = Date.now() - startTime;
+          const progress = Math.min(elapsed / duration, 1);
+          
+          if (isDollar) {
+            current = target * progress;
+            if (target >= 1000000000000) {
+              element.textContent = '$' + (current / 1000000000000).toFixed(2) + 'T';
+            } else if (target >= 1000000000) {
+              element.textContent = '$' + (current / 1000000000).toFixed(1) + 'B';
+            } else {
+              element.textContent = '$' + Math.round(current).toLocaleString();
+            }
+          } else if (isPercentage) {
+            current = target * progress;
+            element.textContent = Math.round(current) + '%';
+          } else if (isFraction) {
+            current = target * progress;
+            element.textContent = Math.round(current) + '/193';
+          } else if (isTime) {
+            element.textContent = Math.round(target * progress) + ' Months';
+          } else {
+            current = target * progress;
+            element.textContent = Math.round(current).toLocaleString();
+          }
+          
+          if (progress < 1) {
+            requestAnimationFrame(update);
+          } else {
+            element.textContent = text;
+          }
+        };
+
+        update();
+      };
+
+      // Trigger animation with slight delay for each stat
+      stats.forEach((stat, index) => {
+        setTimeout(() => animateCounter(stat), index * 150);
+      });
+    });
+  </script>
+
+  <!-- Production Configuration & API -->
+  <script src="config.js"></script>
+  <script src="api.js"></script>
 </body>
 </html>
 
