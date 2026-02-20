@@ -1,4 +1,5 @@
-import fs from 'fs/promises';
+import fs from 'fs';
+import fsp from 'fs/promises';
 import path from 'path';
 import { Audit } from './audit.js';
 
@@ -7,9 +8,27 @@ const LEASES_FILE = path.resolve(process.cwd(), 'leases.json');
 export const LeaseManager = {
   leases: [],
 
-  async init() {
+  // Synchronous initializer to allow permission checks to be synchronous.
+  initSync() {
     try {
-      const raw = await fs.readFile(LEASES_FILE, 'utf8');
+      if (fs.existsSync(LEASES_FILE)) {
+        const raw = fs.readFileSync(LEASES_FILE, 'utf8');
+        this.leases = JSON.parse(raw || '[]');
+      } else {
+        this.leases = [];
+        // ensure file exists
+        fs.writeFileSync(LEASES_FILE, JSON.stringify(this.leases, null, 2), 'utf8');
+      }
+    } catch (e) {
+      this.leases = [];
+      try { fs.writeFileSync(LEASES_FILE, JSON.stringify(this.leases, null, 2), 'utf8'); } catch (_) {}
+    }
+  },
+
+  async init() {
+    // async initializer for code paths that prefer promises
+    try {
+      const raw = await fsp.readFile(LEASES_FILE, 'utf8');
       this.leases = JSON.parse(raw || '[]');
     } catch (e) {
       this.leases = [];
@@ -18,7 +37,7 @@ export const LeaseManager = {
   },
 
   async save() {
-    await fs.writeFile(LEASES_FILE, JSON.stringify(this.leases, null, 2), 'utf8');
+    await fsp.writeFile(LEASES_FILE, JSON.stringify(this.leases, null, 2), 'utf8');
   },
 
   async createLease({ ownerId, organismId, expires = null }) {
@@ -49,6 +68,11 @@ export const LeaseManager = {
   },
 
   isOwnerOf(ownerId, organismId) {
+    return (this.leases || []).some(l => l.ownerId === ownerId && l.organismId === organismId && (!l.expires || new Date(l.expires) > new Date()));
+  },
+
+  // synchronous owner check that does not touch disk; requires `initSync()` run at startup
+  isOwnerOfSync(ownerId, organismId) {
     return (this.leases || []).some(l => l.ownerId === ownerId && l.organismId === organismId && (!l.expires || new Date(l.expires) > new Date()));
   },
 
