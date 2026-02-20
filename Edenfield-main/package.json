@@ -35,6 +35,9 @@
     "lighthouse": "^11.0.0",
     "chokidar": "^3.5.3"
   },
+  "dependencies": {
+    "jsonwebtoken": "^9.0.0"
+  },
   "files": [
     "core/",
     "bin/",

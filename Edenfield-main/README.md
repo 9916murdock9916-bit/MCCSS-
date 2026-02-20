@@ -74,6 +74,21 @@ A sophisticated, production-grade PWA framework for building distributed, confli
 - Capability-based security model
 - Fine-grained authorization at operation boundaries
 
+
+Packaging & releases
+
+- Use `node ./bin/release.js` to create a release artifact (runs `npm pack` in `Edenfield-main`).
+- A manual GitHub Actions workflow (`.github/workflows/release.yml`) will produce and attach a packaged `.tgz` for distribution.
+
+Administration & signed leases
+
+- A minimal admin HTTP server is available at `bin/admin-server.js`. It requires `ADMIN_API_TOKEN` to be set and exposes endpoints to list, create, revoke leases, generate signed lease tokens, and read recent audit log entries.
+- Signed lease tokens use HMAC (HS256). Set `LEASE_SIGNING_SECRET` or let the system generate a secret file `lease_secret` in the repo root. Tokens are created with `POST /leases/:id/token` and can be verified via `core/lease-tokens.js`.
+
+License & Contract Templates
+
+- `LICENSE_TEMPLATE.md` and `CONTRACT_TEMPLATE.md` are included to help start commercial agreements and pilots.
+
 ⚡ **State Management**
 - Reactive state updates
 - Event-driven architecture

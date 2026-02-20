@@ -1,5 +1,6 @@
 import fs from 'fs/promises';
 import path from 'path';
+import { Audit } from './audit.js';
 
 const LEASES_FILE = path.resolve(process.cwd(), 'leases.json');
 
@@ -27,7 +28,20 @@ export const LeaseManager = {
     const lease = { id, ownerId, organismId, createdAt: new Date().toISOString(), expires };
     this.leases.push(lease);
     await this.save();
+    Audit.log('lease.create', { leaseId: id, ownerId, organismId });
     return lease;
+  },
+
+  async revokeLease(id) {
+    await this.init();
+    const before = this.leases.length;
+    this.leases = this.leases.filter(l => l.id !== id);
+    if (this.leases.length !== before) {
+      await this.save();
+      Audit.log('lease.revoke', { leaseId: id });
+      return true;
+    }
+    return false;
   },
 
   getLeasesByOwner(ownerId) {
