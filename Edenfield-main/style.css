@@ -1,0 +1,58 @@
+body {
+  margin: 0;
+  background: #050509;
+  color: #f5f5f7;
+  font-family: system-ui, sans-serif;
+}
+
+.ef-header {
+  padding: 16px;
+  border-bottom: 1px solid #222;
+}
+
+.ef-title {
+  font-size: 22px;
+  font-weight: 600;
+}
+
+.ef-subtitle {
+  font-size: 12px;
+  opacity: 0.7;
+}
+
+.ef-nav {
+  display: flex;
+  gap: 8px;
+  padding: 10px 16px;
+  border-bottom: 1px solid #222;
+}
+
+.ef-nav button {
+  background: #111;
+  color: #f5f5f7;
+  border: 1px solid #333;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.ef-nav button:hover {
+  border-color: #666;
+}
+
+.ef-view {
+  display: none;
+  padding: 16px;
+}
+
+.ef-view.active {
+  display: block;
+}
+
+.ef-footer {
+  padding: 12px 16px;
+  border-top: 1px solid #222;
+  font-size: 12px;
+  opacity: 0.8;
+}
+

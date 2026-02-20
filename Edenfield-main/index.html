@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Eden Field</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+  <header class="ef-header">
+    <div class="ef-title">Eden Field</div>
+    <div class="ef-subtitle">Substrate v500</div>
+  </header>
+
+  <nav class="ef-nav">
+    <button data-view="home">Home</button>
+    <button data-view="identity">Identity</button>
+    <button data-view="system">System</button>
+  </nav>
+
+  <main id="ef-main">
+    <section id="view-home" class="ef-view active">
+      <h1>Home</h1>
+      <p>Welcome to Eden Field. Organisms will mount here.</p>
+    </section>
+
+    <section id="view-identity" class="ef-view">
+      <h1>Identity</h1>
+      <p>Your identity layer will surface here.</p>
+    </section>
+
+    <section id="view-system" class="ef-view">
+      <h1>System</h1>
+      <p>Substrate status, sync, and permissions will appear here.</p>
+    </section>
+  </main>
+
+  <footer class="ef-footer">
+    <span id="ef-status">Booting substrate…</span>
+  </footer>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>
+
