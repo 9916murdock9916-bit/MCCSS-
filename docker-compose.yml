@@ -1,0 +1,14 @@
+version: '3.8'
+services:
+  edenfield:
+    build:
+      context: ./Edenfield-main
+    ports:
+      - "8000:8000"
+      - "9321:9321"
+    environment:
+      - ADMIN_API_TOKEN=${ADMIN_API_TOKEN}
+      - ADMIN_PORT=9321
+      - NODE_ENV=production
+    volumes:
+      - ./Edenfield-main:/app

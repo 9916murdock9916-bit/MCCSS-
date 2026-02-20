@@ -1,0 +1,16 @@
+replicaCount: 1
+
+image:
+  repository: edenfield
+  tag: latest
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 8000
+
+admin:
+  port: 9321
+  tls: false
+
+resources: {}

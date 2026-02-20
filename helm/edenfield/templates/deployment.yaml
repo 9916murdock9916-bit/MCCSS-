@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "edenfield.fullname" . }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ include "edenfield.name" . }}
+  template:
+    metadata:
+      labels:
+        app: {{ include "edenfield.name" . }}
+    spec:
+      containers:
+        - name: edenfield
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          ports:
+            - containerPort: 8000
+            - containerPort: {{ .Values.admin.port }}
+          readinessProbe:
+            httpGet:
+              path: /metrics
+              port: {{ .Values.admin.port }}
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /metrics
+              port: {{ .Values.admin.port }}
+            initialDelaySeconds: 10
+            periodSeconds: 30

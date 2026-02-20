@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "edenfield.fullname" . }}-svc
+spec:
+  selector:
+    app: {{ include "edenfield.name" . }}
+  ports:
+    - protocol: TCP
+      port: {{ .Values.service.port }}
+      targetPort: 8000
+    - protocol: TCP
+      port: {{ .Values.admin.port }}
+      targetPort: {{ .Values.admin.port }}
+  type: {{ .Values.service.type }}

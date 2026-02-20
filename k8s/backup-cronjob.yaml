@@ -1,0 +1,27 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: edenfield-backup
+spec:
+  schedule: "0 */6 * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: backup
+              image: alpine:3.18
+              command: ["/bin/sh", "-c", "mkdir -p /backups && cp /data/leases.json /backups/leases-$(date +%s).json || true; cp /data/audit.log /backups/audit-$(date +%s).log || true"]
+              volumeMounts:
+                - name: data
+                  mountPath: /data
+                - name: backup
+                  mountPath: /backups
+          restartPolicy: OnFailure
+          volumes:
+            - name: data
+              persistentVolumeClaim:
+                claimName: edenfield-data-pvc
+            - name: backup
+              persistentVolumeClaim:
+                claimName: edenfield-backup-pvc

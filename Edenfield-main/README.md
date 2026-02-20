@@ -85,6 +85,33 @@ Administration & signed leases
 - A minimal admin HTTP server is available at `bin/admin-server.js`. It requires `ADMIN_API_TOKEN` to be set and exposes endpoints to list, create, revoke leases, generate signed lease tokens, and read recent audit log entries.
 - Signed lease tokens use HMAC (HS256). Set `LEASE_SIGNING_SECRET` or let the system generate a secret file `lease_secret` in the repo root. Tokens are created with `POST /leases/:id/token` and can be verified via `core/lease-tokens.js`.
 
+Production hardening & orchestration
+
+- TLS/mTLS: `bin/admin-server.js` supports TLS when `ADMIN_TLS_KEY` and `ADMIN_TLS_CERT` point to key/cert files. Set `ADMIN_MTLS=true` to require client certificates (mTLS).
+- OIDC: set `OIDC_JWKS_URI` to enable OIDC JWKS verification for Bearer tokens; falls back to signed lease tokens if not configured.
+- Docker: `Edenfield-main/Dockerfile` and top-level `docker-compose.yml` are provided for local orchestration.
+- Kubernetes: manifests live in `k8s/` (Deployment, Service, CronJob for backups). They assume PVCs for data and backups; adapt before production.
+- Secrets: sample helper `core/vault.js` can fetch secrets from HashiCorp Vault when `VAULT_ADDR` and `VAULT_TOKEN` are set.
+- Rotation & backups: `bin/rotate-lease-secret.js` rotates the lease signing secret and writes an audit entry; `bin/backup.js` copies lease and audit state into `backups/`.
+
+Observability & metrics
+
+- `/metrics` endpoint exposes Prometheus metrics from the admin server.
+- Logging uses `pino` for structured logs; configure `LOG_LEVEL` via env.
+ 
+Security & CI gating
+
+- The repository includes a `Security CI` workflow that runs linting, unit tests, and `npm audit --audit-level=high`. The workflow fails if high-severity vulnerabilities are detected.
+- A `CodeQL` analysis workflow runs static analysis for security issues on push and PRs to `main`.
+- Dependabot is configured to open weekly dependency update PRs for `Edenfield-main` via `.github/dependabot.yml`.
+- Optional Snyk scanning is available when `SNYK_TOKEN` is added to repository secrets; the Security CI includes a step that runs `snyk test` if the token is present.
+
+Operational guidance:
+- Protect the `main` branch with required status checks (`Security CI`, `CodeQL`, and any other important checks).
+- Enable repository secret scanning and Dependabot alerts in repository settings.
+- Configure automated vulnerability notifications and review Dependabot PRs promptly. Consider auto-merging low-risk patch/minor updates after verification.
+
+
 License & Contract Templates
 
 - `LICENSE_TEMPLATE.md` and `CONTRACT_TEMPLATE.md` are included to help start commercial agreements and pilots.

@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: edenfield
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: edenfield
+  template:
+    metadata:
+      labels:
+        app: edenfield
+    spec:
+      containers:
+        - name: edenfield
+          image: edenfield:latest
+          ports:
+            - containerPort: 8000
+            - containerPort: 9321
+          env:
+            - name: ADMIN_PORT
+              value: "9321"
+            - name: NODE_ENV
+              value: "production"
+          readinessProbe:
+            httpGet:
+              path: /metrics
+              port: 9321
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /metrics
+              port: 9321
+            initialDelaySeconds: 10
+            periodSeconds: 30

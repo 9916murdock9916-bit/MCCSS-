@@ -1,20 +1,35 @@
 import jwt from 'jsonwebtoken';
 import fs from 'fs/promises';
+import fssync from 'fs';
 import path from 'path';
 
-const SECRET_FILE = path.resolve(process.cwd(), 'lease_secret');
+// Flexible secret file resolution: prefer explicit env path, then project-level file, then repo root.
+const DEFAULT_SECRET_PATHS = [
+  () => process.env.LEASE_SECRET_PATH,
+  () => path.resolve(process.cwd(), 'Edenfield-main', 'lease_secret'),
+  () => path.resolve(process.cwd(), 'lease_secret')
+];
 
 async function getSecret() {
-  // Prefer env var for production safety
+  // Prefer direct secret value for production safety
   if (process.env.LEASE_SIGNING_SECRET) return process.env.LEASE_SIGNING_SECRET;
-  try {
-    const s = await fs.readFile(SECRET_FILE, 'utf8');
-    return s.trim();
-  } catch (e) {
-    const generated = (Math.random().toString(36) + Date.now().toString(36)).slice(2);
-    await fs.writeFile(SECRET_FILE, generated, 'utf8');
-    return generated;
+
+  for (const pfn of DEFAULT_SECRET_PATHS) {
+    const p = pfn();
+    if (!p) continue;
+    try {
+      const s = await fs.readFile(p, 'utf8');
+      return s.trim();
+    } catch (e) {
+      // try next
+    }
   }
+
+  // generate into project-level file
+  const target = path.resolve(process.cwd(), 'Edenfield-main', 'lease_secret');
+  const generated = (Math.random().toString(36) + Date.now().toString(36)).slice(2);
+  try { await fs.writeFile(target, generated, 'utf8'); } catch (e) { /* best-effort */ }
+  return generated;
 }
 
 export const LeaseTokens = {
